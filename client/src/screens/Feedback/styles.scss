@@ -1,0 +1,40 @@
+.feedback_form {
+  margin: 0 auto;
+
+  &__title{
+    font-size: 2em;
+    font-weight: bolder;
+  }
+}
+
+.feedback-card {
+  padding: 1.5em 0;
+  border-bottom: 1px solid gray;
+
+  &__participant-name {
+    font-size: 1.5em;
+    font-weight: 700;
+  }
+}
+
+.question-group {
+  margin: 1em 0;
+
+  &__title {
+    font-size: 1.25em;
+    font-weight: 500;
+
+    margin-bottom: 0.25em;
+  }
+
+  &__comment {
+    width: 100%;
+    height: 3em;
+  }
+
+  &__label {
+    font-weight: bold;
+    margin-top: 0.75em;
+    margin-bottom: 0.25em;
+  }
+}

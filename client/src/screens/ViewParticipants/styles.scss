@@ -1,0 +1,7 @@
+.feedback_container {
+  padding: 1rem 0;
+}
+
+.feedback_container:not(:last-child) {
+  border-bottom: 1px solid #cccccc;
+}

@@ -1,0 +1,98 @@
+defaults: &defaults #working_directory: ./circleci
+  docker:
+    - image: circleci/node:11
+version: 2.1
+jobs:
+  build-server:
+    <<: *defaults
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "server/yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: cd server && yarn install --frozen-lockfile
+      # Build with babel and put static files to dist folder
+      - run:
+          name: Build with babel
+          command: cd server && node_modules/.bin/babel src --out-dir dist
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "server/yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+  deploy-server:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Deploy to Heroku
+          command: |
+            cd server
+            git init
+            git config user.email "dummy@dummy.com"
+            git config user.name "dummy dummy"
+            echo "node_modules" >> .gitignore
+            git add .
+            git commit -m "bad practices"
+            git push -u https://heroku:$NODE_APP_HEROKU_API_KEY@git.heroku.com/$NODE_APP_HEROKU_APP_NAME.git master --force
+
+  build-client:
+    <<: *defaults
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "client/yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: cd client && yarn install --frozen-lockfile
+      - run:
+          name: Build with react
+          command: cd client && yarn run build
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "client/yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+  deploy-client:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Deploy to Heroku
+          command: |
+            cd client
+            git init
+            git config user.email "dummy@dummy.com"
+            git config user.name "dummy dummy"
+            echo "node_modules" >> .gitignore
+            echo "build" >> .gitignore
+            git add .
+            git commit -m "bad practices"
+            git push -u https://heroku:$REACT_APP_HEROKU_API_KEY@git.heroku.com/$REACT_APP_NAME.git master --force
+
+workflows:
+  build-test-deploy-server:
+    jobs:
+      - build-server
+      - deploy-server:
+          requires:
+            - build-server
+          filters:
+            branches:
+              only: master
+
+      - build-client
+      - deploy-client:
+          requires:
+            - build-client
+            - deploy-server
+          filters:
+            branches:
+              only: master

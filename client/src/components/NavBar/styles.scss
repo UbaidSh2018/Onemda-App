@@ -1,0 +1,22 @@
+.navbar {
+  display: flex;
+  background-color: #0E365D;
+  justify-content: space-between;
+
+  &__signout_button {
+    color: #fff;
+    justify-self: flex-end;
+    font-weight: 600;
+    align-self: center;
+    &:hover {
+      cursor: auto;
+    }
+  }
+
+  a {
+    font-weight: 600;
+    text-decoration: none;
+    color: #FFFFFF;
+
+  }
+}

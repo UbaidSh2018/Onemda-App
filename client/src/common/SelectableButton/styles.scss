@@ -1,0 +1,18 @@
+.selectable_button {
+  --background-color: white;
+  background-color: var(--background-color);
+  padding: 5px;
+  text-align: center;
+  border: 1px solid black;
+  min-width: 120px;
+
+  &--selected {
+    background-color: #001d39 !important;
+    color: white;
+  }
+
+  &:hover {
+    background-color: #001d78;
+    color: white;
+  }
+}
